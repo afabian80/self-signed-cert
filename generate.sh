@@ -6,13 +6,21 @@ DOMAIN_CSR='mydomain.csr'
 DOMAIN_KEY='mydomain.key'
 DOMAIN_CRT='mydomain.crt'
 
-echo "Generating root CA key..."
-openssl genrsa -des3 -out ${ROOT_CA_KEY} 4096
-echo ""
+if [ ! -e ${ROOT_CA_KEY} ]; then
+    echo "Generating root CA key..."
+    openssl genrsa -des3 -out ${ROOT_CA_KEY} 4096
+    echo ""
+else
+    echo "${ROOT_CA_KEY} already exists, skipping generation..."
+fi
 
-echo "Generating root CA cert..."
-openssl req -x509 -new -nodes -key ${ROOT_CA_KEY} -sha256 -days 1024 -subj "/C=HU/ST=Budapest/O=My CA Org/CN=myca" -out ${ROOT_CA_CRT}
-echo ""
+if [ ! -e ${ROOT_CA_CRT} ]; then
+    echo "Generating root CA cert..."
+    openssl req -x509 -new -nodes -key ${ROOT_CA_KEY} -sha256 -days 1024 -subj "/C=HU/ST=Budapest/O=My CA Org/CN=myca" -out ${ROOT_CA_CRT}
+    echo ""
+else
+    echo "${ROOT_CA_CRT} already exists, skipping generation..."
+fi
 
 echo "Generating altnames.txt..."
 echo "subjectAltName = DNS:*.mydomain.com, DNS:mydomain.com, DNS:mydomain" > altnames.txt 
@@ -34,5 +42,7 @@ echo "Verifying DNS names in CRT file..."
 openssl x509 -in ${DOMAIN_CRT} -noout -text | grep DNS
 echo ""
 
-echo "Starting python https server"
+echo "Add ${ROOT_CA_CRT} to your browser as a trusted CA cert!!!"
+echo ""
+echo "Starting python https server..."
 python test.py
