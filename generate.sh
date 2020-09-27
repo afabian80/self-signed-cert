@@ -23,3 +23,7 @@ echo ""
 echo "Self sigining the sertificate..."
 openssl x509 -req -in sslcert.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out fabiancsalad.crt -days 500 -sha256 -extfile altnames.txt
 echo ""
+
+echo "Verifying DNS names in CRT file..."
+openssl x509 -in fabiancsalad.crt -noout -text | grep DNS
+echo ""
