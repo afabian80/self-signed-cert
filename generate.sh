@@ -42,7 +42,11 @@ echo "Verifying DNS names in CRT file..."
 openssl x509 -in ${DOMAIN_CRT} -noout -text | grep DNS
 echo ""
 
-echo "Add ${ROOT_CA_CRT} to your browser as a trusted CA cert!!!"
+echo "******************** TODO MANUALLY ***************************"
+echo "Add the generated ${ROOT_CA_CRT} to your browser as a trusted CA cert!"
+echo "Update /etc/hosts to include \"127.0.0.1   mydomain.com\""
+echo "**************************************************************"
+
 echo ""
 echo "Starting python https server..."
 python test.py

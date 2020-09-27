@@ -8,6 +8,5 @@ httpd.socket = ssl.wrap_socket(httpd.socket,
                                certfile='mydomain.crt',
                                server_side=True)
 
-print("Update /etc/hosts to include \"127.0.0.1   mydomain.com\"")
 print("Serving on https://mydomain.com:8443")
 httpd.serve_forever()
