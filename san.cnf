@@ -13,4 +13,3 @@ subjectAltName = @alt_names
 [alt_names]
 DNS.1   = mydomain.com
 DNS.2   = www.mydomain.com
-DNS.3   = 127.0.0.1

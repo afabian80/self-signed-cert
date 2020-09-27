@@ -1,0 +1,1 @@
+A simple solution to generate my own CA, generate and sign my own cert, and show in a browser that it works.
