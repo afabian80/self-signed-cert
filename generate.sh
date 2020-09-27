@@ -1,20 +1,20 @@
 #!/usr/bin/bash -eux
 
-# generate root CA key
+echo "Generating root CA key..."
 openssl genrsa -des3 -out rootCA.key 4096
 
-# generate root CA cert
+echo "Generating root CA cert..."
 openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt
 
-# generate certificate request for a domain
-openssl req -out sslcert.csr -newkey rsa:2048 -nodes -keyout private.key
-
-# verify request content
-ls -la
-openssl req -noout -text -in sslcert.csr | grep DNS
-
-# generate altnames.txt
+echo "Generating altnames.txt..."
 echo "subjectAltName = DNS:*.fabiancsalad.com, DNS:fabiancsalad.com, DNS:fabiancsalad" > altnames.txt 
 
-# self sign the csr
+echo "Generating certificate signing request for your domain..."
+openssl req -out sslcert.csr -newkey rsa:2048 -nodes -keyout private.key -extfile altnames.txt
+
+# verify request content
+echo "Verifying DNS names in CSR file..."
+openssl req -noout -text -in sslcert.csr | grep DNS
+
+echo "Self sigining the sertificate..."
 openssl x509 -req -in sslcert.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out fabiancsalad.crt -days 500 -sha256 -extfile altnames.txt
