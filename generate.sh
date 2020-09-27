@@ -1,11 +1,17 @@
 #!/usr/bin/bash -e
 
+ROOT_CA_KEY='rootCA.key'
+ROOT_CA_CRT='rootCA.crt'
+DOMAIN_CSR='sslcert.csr'
+DOMAIN_KEY='private.key'
+DOMAIN_CRT='acmex.crt'
+
 echo "Generating root CA key..."
-openssl genrsa -des3 -out rootCA.key 4096
+openssl genrsa -des3 -out ${ROOT_CA_KEY} 4096
 echo ""
 
 echo "Generating root CA cert..."
-openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt
+openssl req -x509 -new -nodes -key ${ROOT_CA_KEY} -sha256 -days 1024 -out ${ROOT_CA_CRT}
 echo ""
 
 echo "Generating altnames.txt..."
@@ -13,17 +19,17 @@ echo "subjectAltName = DNS:*.fabiancsalad.com, DNS:fabiancsalad.com, DNS:fabianc
 echo ""
 
 echo "Generating certificate signing request for your domain..."
-openssl req -out sslcert.csr -newkey rsa:2048 -nodes -keyout private.key -config san.cnf
+openssl req -out ${DOMAIN_CSR} -newkey rsa:2048 -nodes -keyout ${DOMAIN_KEY} -config san.cnf
 echo ""
 
 echo "Verifying DNS names in CSR file..."
-openssl req -noout -text -in sslcert.csr | grep DNS
+openssl req -noout -text -in ${DOMAIN_CSR} | grep DNS
 echo ""
 
 echo "Self sigining the sertificate..."
-openssl x509 -req -in sslcert.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out fabiancsalad.crt -days 500 -sha256 -extfile altnames.txt
+openssl x509 -req -in ${DOMAIN_CSR} -CA ${ROOT_CA_CRT} -CAkey ${ROOT_CA_KEY} -CAcreateserial -out ${DOMAIN_CRT} -days 500 -sha256 -extfile altnames.txt
 echo ""
 
 echo "Verifying DNS names in CRT file..."
-openssl x509 -in fabiancsalad.crt -noout -text | grep DNS
+openssl x509 -in ${DOMAIN_CRT} -noout -text | grep DNS
 echo ""
