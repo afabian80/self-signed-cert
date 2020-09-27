@@ -11,15 +11,15 @@ openssl genrsa -des3 -out ${ROOT_CA_KEY} 4096
 echo ""
 
 echo "Generating root CA cert..."
-openssl req -x509 -new -nodes -key ${ROOT_CA_KEY} -sha256 -days 1024 -out ${ROOT_CA_CRT}
+openssl req -x509 -new -nodes -key ${ROOT_CA_KEY} -sha256 -days 1024 -subj "/C=HU/ST=Budapest/O=My CA Org/CN=myca" -out ${ROOT_CA_CRT}
 echo ""
 
 echo "Generating altnames.txt..."
-echo "subjectAltName = DNS:*.fabiancsalad.com, DNS:fabiancsalad.com, DNS:fabiancsalad" > altnames.txt 
+echo "subjectAltName = DNS:*.acmex.com, DNS:acmex.com, DNS:acmex" > altnames.txt 
 echo ""
 
 echo "Generating certificate signing request for your domain..."
-openssl req -out ${DOMAIN_CSR} -newkey rsa:2048 -nodes -keyout ${DOMAIN_KEY} -config san.cnf
+openssl req -out ${DOMAIN_CSR} -newkey rsa:2048 -nodes -subj "/C=HU/ST=Budapest/O=Acmex Org/CN=acmex" -keyout ${DOMAIN_KEY} -config san.cnf
 echo ""
 
 echo "Verifying DNS names in CSR file..."
