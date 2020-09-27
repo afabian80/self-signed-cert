@@ -2,9 +2,9 @@
 
 ROOT_CA_KEY='rootCA.key'
 ROOT_CA_CRT='rootCA.crt'
-DOMAIN_CSR='sslcert.csr'
-DOMAIN_KEY='private.key'
-DOMAIN_CRT='acmex.crt'
+DOMAIN_CSR='mydomain.csr'
+DOMAIN_KEY='mydomain.key'
+DOMAIN_CRT='mydomain.crt'
 
 echo "Generating root CA key..."
 openssl genrsa -des3 -out ${ROOT_CA_KEY} 4096
@@ -15,11 +15,11 @@ openssl req -x509 -new -nodes -key ${ROOT_CA_KEY} -sha256 -days 1024 -subj "/C=H
 echo ""
 
 echo "Generating altnames.txt..."
-echo "subjectAltName = DNS:*.acmex.com, DNS:acmex.com, DNS:acmex" > altnames.txt 
+echo "subjectAltName = DNS:*.mydomain.com, DNS:mydomain.com, DNS:mydomain" > altnames.txt 
 echo ""
 
 echo "Generating certificate signing request for your domain..."
-openssl req -out ${DOMAIN_CSR} -newkey rsa:2048 -nodes -subj "/C=HU/ST=Budapest/O=Acmex Org/CN=acmex" -keyout ${DOMAIN_KEY} -config san.cnf
+openssl req -out ${DOMAIN_CSR} -newkey rsa:2048 -nodes -subj "/C=HU/ST=Budapest/O=My Company/CN=mydomain" -keyout ${DOMAIN_KEY} -config san.cnf
 echo ""
 
 echo "Verifying DNS names in CSR file..."
@@ -33,3 +33,6 @@ echo ""
 echo "Verifying DNS names in CRT file..."
 openssl x509 -in ${DOMAIN_CRT} -noout -text | grep DNS
 echo ""
+
+echo "Starting python https server"
+python test.py

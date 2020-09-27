@@ -11,6 +11,6 @@ commonName                 = Common Name (e.g. server FQDN or YOUR name)
 [ req_ext ]
 subjectAltName = @alt_names
 [alt_names]
-DNS.1   = acmex.com
-DNS.2   = www.acmex.com
+DNS.1   = mydomain.com
+DNS.2   = www.mydomain.com
 DNS.3   = 127.0.0.1
